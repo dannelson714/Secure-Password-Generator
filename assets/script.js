@@ -18,10 +18,7 @@ var numeric=[0,1,2,3,4,5,6,7,8,9];
 
 
 
-function generatePassword(){
-    result = window.prompt("message?");
-    return result;
-}
+
 
 for (var i=0; i<special_characters.length; i++){
     console.log(special_characters[i])
@@ -30,22 +27,107 @@ for (var i=0; i<special_characters.length; i++){
 generateBtn.addEventListener("click", writePassword);
 
 
-// WHEN I click the button to generate a password
-// THEN I am presented with a series of prompts for password criteria
-//This can be achieved by the following method: https://developer.mozilla.org/en-US/docs/Web/API/Window/prompt
+
+//Creates the first prompt to determine number of characters, returns that value.
+function prompt_1(){
+  result = window.prompt("How many characters would you like your password to contain?")
+  if (result < 8){
+    window.confirm("Password length must be at least 8 characters");
+    prompt_1();
+  }
+  if (result > 128){
+    window.confirm("Password length must be at least 128 characters");
+    prompt_1();
+  }
+  if (isNaN(result)){
+    window.confirm("Character length must be a number!");
+    prompt_1();
+  }
+  return result;
+}
 
 
-// WHEN prompted for password criteria
-// THEN I select which criteria to include in the password
+i=prompt_1()
+console.log(i)
 
+//Asks whether to include lowercase letters. If response is "OK" then will return Boolean.
+//Feed a True value into later function.
+function prompt_2(){
+  return window.confirm("Click OK to confirm including lowercase letters")
+}
 
-// WHEN prompted for the length of the password
-// THEN I choose a length of at least 8 characters and no more than 128 characters
-// This input can be verified by a collection of if statements'
+console.log(prompt_2())
 
-// WHEN asked for character types to include in the password
-// THEN I confirm whether or not to include lowercase, uppercase, numeric, and/or special characters
-// User gives a yes or no (Two states - True or False - Booleans) and unlocks the corresponding array for each category (to be filled in)
+if (prompt_2){
+  var character_set=[]
+  character_set.push(lower_case)
+}
+
+console.log(character_set)
+//Asks whether to include uppercase letters. If response is "OK" then will return Boolean.
+//Feed a True value into later function.
+function prompt_3(){
+  return window.confirm("Click OK to confirm including uppercase letters")
+}
+
+//Asks whether to include numerics 0-9. If response is "OK" then will return Boolean.
+//Feed a True value into later function.
+function prompt_4(){
+  return window.confirm("Click OK to confirm including numerics 0-9")
+}
+
+//Asks whether to include special characters. If response is "OK" then will return Boolean.
+//Feed a True value into later function.
+function prompt_5(){
+  return window.confirm("Click OK to confirm including special characters")
+}
+
+//Function to get a random number (source: MDM)
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function check_password(intended_password){
+  for (i =0; i<intended_password.length; i++){
+    if ((intended_password[i] in special_characters === false) && 
+    (intended_password[i] in lower_case === false) &&
+    (intended_password[i] in upper_case === false) &&
+    (intended_password[i] in numeric === false)){
+    return false
+    }
+  }
+}
+
+function generatePassword(){
+  var character_set=[];
+  var password = "";
+  password_length=prompt_1();
+  if (prompt_2){
+    character_set.push(lower_case);
+  }
+  if (prompt_3){
+    character_set.push(upper_case);
+  }
+  if (prompt_4){
+    character_set.push(numeric);
+  }
+  if (prompt_5){
+    character_set.push(special_characters);
+  }
+  if (character_set.length == 0){
+    window.alert("Must select at least one character type!");
+    generatePassword();
+  }
+  for (var i=0; i<password_length; i++){
+    var j = getRandomInt(character_set.length);
+    var k = getRandomInt(charcter_set[j].length);
+    password = password + character_set[j][k];
+  }
+//need to formalize the above into a seperate function
+  check_password(password)
+
+  return password;
+}
 
 //WHEN I answer each prompt
 // THEN my input should be validated and at least one character type should be selected
