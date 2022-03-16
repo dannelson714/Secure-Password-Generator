@@ -15,22 +15,12 @@ var lower_case=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p",
 var upper_case=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 var numeric=[0,1,2,3,4,5,6,7,8,9];
 
-
-
-
-
-
-for (var i=0; i<special_characters.length; i++){
-    console.log(special_characters[i])
-}
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
 
-
-
 //Creates the first prompt to determine number of characters, returns that value.
 function prompt_1(){
-  result = window.prompt("How many characters would you like your password to contain?")
+  result = window.prompt("How many characters would you like your password to contain?");
   if (result < 8){
     window.confirm("Password length must be at least 8 characters");
     prompt_1();
@@ -46,40 +36,29 @@ function prompt_1(){
   return result;
 }
 
-
-i=prompt_1()
-console.log(i)
-
 //Asks whether to include lowercase letters. If response is "OK" then will return Boolean.
 //Feed a True value into later function.
 function prompt_2(){
-  return window.confirm("Click OK to confirm including lowercase letters")
-}
-
-console.log(prompt_2())
-
-if (prompt_2){
-  var character_set=[]
-  character_set.push(lower_case)
+  return window.confirm("Click OK to confirm including lowercase letters");
 }
 
 console.log(character_set)
 //Asks whether to include uppercase letters. If response is "OK" then will return Boolean.
 //Feed a True value into later function.
 function prompt_3(){
-  return window.confirm("Click OK to confirm including uppercase letters")
+  return window.confirm("Click OK to confirm including uppercase letters");
 }
 
 //Asks whether to include numerics 0-9. If response is "OK" then will return Boolean.
 //Feed a True value into later function.
 function prompt_4(){
-  return window.confirm("Click OK to confirm including numerics 0-9")
+  return window.confirm("Click OK to confirm including numerics 0-9");
 }
 
 //Asks whether to include special characters. If response is "OK" then will return Boolean.
 //Feed a True value into later function.
 function prompt_5(){
-  return window.confirm("Click OK to confirm including special characters")
+  return window.confirm("Click OK to confirm including special characters");
 }
 
 //Function to get a random number (source: MDM)
@@ -87,17 +66,43 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-function check_password(intended_password){
+//Function to check if password includes at least one of each included character type
+function check_password(intended_password, list_of_characters){
   for (i =0; i<intended_password.length; i++){
-    if ((intended_password[i] in special_characters === false) && 
-    (intended_password[i] in lower_case === false) &&
-    (intended_password[i] in upper_case === false) &&
-    (intended_password[i] in numeric === false)){
-    return false
+    false_list=[];
+    for (j=0; j<list_of_characters.length; j++){
+      if (list_of_characters[j].includes(intended_password[i])){
+        false_list.push(true);
+      }
+      else{
+        false_list.push(false);
+      }
     }
+    if (!false_list.include(true)){
+      return false;
+    }
+  }
+    return true;
+}
+
+//A function to tie together the random number generation and the user inputs to produce
+//a password. Returns the password unless the check determines not all the character sets
+//were used.
+function final_generate(pw_length,char_set,pw){
+  for (var i=0; i<pw_length; i++){
+    var j = getRandomInt(char_set.length);
+    var k = getRandomInt(char_set[j].length);
+    pw = pw + char_set[j][k];
+  }
+  if (check_password(pw,char_set) === false){
+    final_generate(pw_length, char_set,pw);
+  }
+  else{
+    return pw;
   }
 }
 
+//MAIN function to generate a password.
 function generatePassword(){
   var character_set=[];
   var password = "";
@@ -118,21 +123,8 @@ function generatePassword(){
     window.alert("Must select at least one character type!");
     generatePassword();
   }
-  for (var i=0; i<password_length; i++){
-    var j = getRandomInt(character_set.length);
-    var k = getRandomInt(charcter_set[j].length);
-    password = password + character_set[j][k];
-  }
-//need to formalize the above into a seperate function
-  check_password(password)
+  password = final_generate(password_length, character_set, password);
 
   return password;
 }
 
-//WHEN I answer each prompt
-// THEN my input should be validated and at least one character type should be selected
-
-// WHEN all prompts are answered
-// THEN a password is generated that matches the selected criteria
-
-//Follow the video from Monday for step-by-step for completing this. The code above will provide the final linkage to the html and so on.
