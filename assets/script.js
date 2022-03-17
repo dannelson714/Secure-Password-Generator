@@ -5,18 +5,19 @@ var generateBtn = document.querySelector("#generate");
 function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
-
   passwordText.value = password;
-
 }
-
-var special_characters=["!",'"',"#","$","%","&","'","(",")","*","+","\,","-",".","/",":",";","<","=",">","?","@","[","\\","]","^","_","`","{","|","}","~"];
-var lower_case=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
-var upper_case=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-var numeric=[0,1,2,3,4,5,6,7,8,9];
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
+
+
+
+var special_characters=["!","\"","#","$","%","&","\'","(",")","*","+","\,","-",".","/",":",";","<","=",">","?","@","[","\\","]","^","_","`","{","|","}","~"];
+var lower_case=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+var upper_case=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+var numeric=["0","1","2","3","4","5","6","7","8","9"];
+
 
 //Creates the first prompt to determine number of characters, returns that value.
 function prompt_1(){
@@ -39,10 +40,10 @@ function prompt_1(){
 //Asks whether to include lowercase letters. If response is "OK" then will return Boolean.
 //Feed a True value into later function.
 function prompt_2(){
-  return window.confirm("Click OK to confirm including lowercase letters");
+  var result = window.confirm("Click OK to confirm including lowercase letters");
+  return result
 }
 
-console.log(character_set)
 //Asks whether to include uppercase letters. If response is "OK" then will return Boolean.
 //Feed a True value into later function.
 function prompt_3(){
@@ -78,7 +79,7 @@ function check_password(intended_password, list_of_characters){
         false_list.push(false);
       }
     }
-    if (!false_list.include(true)){
+    if (!false_list.includes(true)){
       return false;
     }
   }
@@ -95,6 +96,7 @@ function final_generate(pw_length,char_set,pw){
     pw = pw + char_set[j][k];
   }
   if (check_password(pw,char_set) === false){
+    pw = "";
     final_generate(pw_length, char_set,pw);
   }
   else{
@@ -107,16 +109,16 @@ function generatePassword(){
   var character_set=[];
   var password = "";
   password_length=prompt_1();
-  if (prompt_2){
+  if (prompt_2()){
     character_set.push(lower_case);
   }
-  if (prompt_3){
+  if (prompt_3()){
     character_set.push(upper_case);
   }
-  if (prompt_4){
+  if (prompt_4()){
     character_set.push(numeric);
   }
-  if (prompt_5){
+  if (prompt_5()){
     character_set.push(special_characters);
   }
   if (character_set.length == 0){
